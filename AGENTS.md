@@ -6,4 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
+## This is a school project
+You are only allowed to work on visuals, interactive elements, and design. All text, lecture text, informative text, large paragraphs, layout design, etc must be prompted directly to you. You do not have creative liberty over elements of the site that are informative and will be graded.
+
 <!-- END:nextjs-agent-rules -->
