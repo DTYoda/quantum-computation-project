@@ -1,0 +1,431 @@
+[
+  {
+    "slug": "motivation",
+    "title": "Motivation",
+    "topics": "Classical circuits · Randomness",
+    "sections": []
+  },
+  {
+    "slug": "definitions",
+    "title": "Basic definitions",
+    "topics": "Qubits · Gates · Measurement",
+    "sections": [
+      {
+        "id": "s0",
+        "title": "One qubit system",
+        "blocks": [
+          "Now that we understand the motivation behind quantum circuits, and have reviewed classical circuits and randomized circuits, we can move onto defining quantum circuits and their inner workings.",
+          "The first thing we need to define is a qubit, which is the quantum analog of a traditional bit",
+          "Definition: A qubit is a quantum bit, which is represented by a vector $(\\alpha,\\beta)^{\\mathsf T}$ of  “probability amplitude” of being 0 or 1. We can write $|\\psi\\rangle=\\alpha|0\\rangle+\\beta|1\\rangle=\\alpha(1,0)^{\\mathsf T}+\\beta(0,1)^{\\mathsf T}=(\\alpha,\\beta)^{\\mathsf T}$, Where $|\\alpha|^2$ is the probability the qubit will collapse to 0 and $|\\beta|^2$ is the probability the qubit will collapse to 1. Thus, $|\\alpha|^2$ + $|\\beta|^2$ = 1.",
+          "Unlike a traditional bit which is either 0 or 1, a qubit can be in a “super-position” between 0 and 1. It has “probability amplitudes,” whose squared magnitudes give its probability of collapsing to a state of 0 or 1. Probability amplitudes can be negative, which allow the qubits to have unique interactions with gates without changing their probability of collapsing to a given bit. Representing qubits as vectors and allowing them to have negative amplitudes is what differentiates quantum circuits from classical randomized circuits.",
+          "Definition: The normalization condition states that the squared magnitudes of the probability amplitudes of a qubit system must sum to 1. For a 1-qubit system this means $|\\alpha|^2$ + $|\\beta|^2$ = 1.",
+          "Definition: Measurement. When a qubit is measured in the computational basis, we observe a classical bit of either 0 or 1. After observing 0 or 1, the qubit's state becomes $|0\\rangle$ or $|1\\rangle$ respectively. We denote P(0) to be the probability the qubit collapses to a 0 bit and P(1) to be the probability the qubit collapses to a 1 bit. P(0) = $|\\alpha|^2$ and P(1) = $|\\beta|^2$.",
+          "Two common qubit states are",
+          "$$|+\\rangle=\\frac{|0\\rangle+|1\\rangle}{\\sqrt2}$$",
+          "$$|-\\rangle=\\frac{|0\\rangle-|1\\rangle}{\\sqrt2}$$",
+          "Note that for both of these qubits, P(0) = P(1) = $\\tfrac12$, despite them having different probability amplitudes.",
+          "Aside: Note that qubit amplitudes need not be real numbers, as long as the normalization condition holds. In general, they are complex numbers. This is why we use $|\\alpha|^2$ rather than α² when computing measurement probabilities. It is possible to simulate complex-amplitude quantum computation using real amplitudes with an additional qubit and appropriate gates. However, this does not mean all quantum states have real amplitudes. For our basic examples, we will stick to real amplitudes to simplify the understanding."
+        ]
+      },
+      {
+        "id": "s12",
+        "title": "Multiple Qubit System",
+        "blocks": [
+          "Okay, now we understand what a qubit is and how to represent a single qubit mathematically and probabilistically. However, we don’t know how to represent multiple qubits at the same time. Suppose our current circuit has two qubits and we want to be able to represent it. We do so the same way as we did a single qubit, we take all its possible states and combine them using amplitudes. Given a qubit x and qubit y, the possible states of the system denoted $|xy\\rangle$ are:",
+          "$$|00\\rangle\\quad |01\\rangle\\quad |10\\rangle\\quad |11\\rangle$$",
+          "Thus, we can denote our state $|xy\\rangle$ as a 4-vector (a,b,c,d) where a,b,c, and d are probability amplitudes of the above states. That is,",
+          "$$|\\psi\\rangle=\\alpha|00\\rangle+\\beta|01\\rangle+\\gamma|10\\rangle+\\delta|11\\rangle=(\\alpha,\\beta,\\gamma,\\delta)^{\\mathsf T}$$",
+          "Once again, we can use the notation P(00) = $|\\alpha|^2$, P(01) = $|\\beta|^2$, P(10) = $|\\gamma|^2$ and P(11) = $|\\delta|^2$ to denote the probability a certain state is observed upon measurement. So, $|\\alpha|^2$ + $|\\beta|^2$ + $|\\gamma|^2$ + $|\\delta|^2$ = 1. Note that it takes 2 states for a 1 qubit system and 4 states for a 2 qubit system. Generally, an n-qubit system has $2^n$ computational basis states, with a separate amplitude for each one. We can represent a general pure state as $|\\psi \\rangle$ = $\\sum_{x\\in\\{0,1\\}^n}\\alpha_x|x\\rangle$, where $\\sum_{x\\in\\{0,1\\}^n}|\\alpha_x|^2$ = 1. This means the number of amplitudes needed to describe a general state grows exponentially with the number of qubits. Does this suggest we can solve exponentially hard problems with a polynomial number of qubits?",
+          "Okay, we can now mathematically represent multiple qubit states, but how do we actually combine qubits? Well, since qubits are represented as vectors, we combine them using linear algebra. We need to be sure that whatever operation we use to combine them preserves the normalization condition.",
+          "One way of combining different qubit systems into one is a tensor product. This preserves the normalization condition and can be expressed mathematically as:",
+          "$$|x\\rangle=(a_0,b_0)^{\\mathsf T}$$",
+          "$$|y\\rangle=(a_1,b_1)^{\\mathsf T}$$",
+          "$$|x\\rangle\\otimes|y\\rangle=(a_0a_1,a_0b_1,b_0a_1,b_0b_1)^{\\mathsf T}$$",
+          "It can be easily shown algebraically that the normalization condition is satisfied here. This leads to an interesting question: are there qubit systems that cannot be represented as a combination of other qubit systems? The answer is yes, and leads to the definition of entanglement"
+        ]
+      },
+      {
+        "id": "s23",
+        "title": "Entangled Systems",
+        "blocks": [
+          "Definition: a qubit system is entangled if it cannot be represented as the tensor product of smaller qubit systems",
+          "For example, the system",
+          "$$|\\psi\\rangle=\\frac{|00\\rangle+|11\\rangle}{\\sqrt2}$$",
+          "Cannot be represented as the combination of two one-qubit systems. If we were to observe the x, we are given P(0) = P(1) = $\\tfrac12$. Same for y. However, if we know the value of x, we are guaranteed that x=y. However, this correlation alone is not enough to prove entanglement, since classical randomized bits can also be perfectly correlated.",
+          "Proof: Suppose the state could be written as (a$|0\\rangle$ + b$|1\\rangle$) ⊗ (c$|0\\rangle$ + d$|1\\rangle$). Expanding and comparing coefficients, we would need ac = $1/\\sqrt2$, ad = 0, bc = 0, and bd = $1/\\sqrt2$. Since ac and bd are nonzero, a, b, c, and d must all be nonzero, contradicting ad = bc = 0. So the state cannot be written as a tensor product of two one-qubit states, and is entangled.",
+          "An important detail is that entanglement depends on how we split the system into parts. A larger system may contain two entangled qubits while another qubit is independent of them. So we have to be careful about treating an entangled system as something that can never be broken down in any way."
+        ]
+      },
+      {
+        "id": "s29",
+        "title": "Quantum Gates",
+        "blocks": [
+          "Just like classical circuit gates manipulate bits or a series of multiple bits, quantum gates take in quantum states and qubit systems, and manipulate them into other qubit systems and states. It’s intuitive to think that since qubit systems are represented by vectors, quantum gates must be something similar. Notably, quantum gates are matrices and applying a quantum gate is multiplying matrices.",
+          "For a single qubit, we need a $2\\times2$ matrix to represent a gate since it must take in 2-vector and output a 2-vector. We need to make sure that applying the gate maintains the normalization condition of the output. For this to happen, we need",
+          "$$\\lVert U|\\psi\\rangle\\rVert^2=\\lVert|\\psi\\rangle\\rVert^2=1$$",
+          "That is, multiplying the system by the gate cannot change its magnitude. For this condition to hold, we need U to be a unitary matrix. Since this is not a lesson on linear algebra, we will assume you know most of what this means. In short, a matrix U is unitary if $U^\\dagger U=I$, where $U^\\dagger$ is its conjugate transpose. Equivalently, its inverse is its conjugate transpose, so $U^{-1}=U^\\dagger$. This makes quantum gates reversible and ensures that the total measurement probability remains 1.",
+          "There are two widely used unary quantum gates that are important to understand."
+        ]
+      },
+      {
+        "id": "s35",
+        "title": "Pauli-X gate",
+        "blocks": [
+          "$$X=\\begin{bmatrix}0&1\\\\1&0\\end{bmatrix}$$",
+          "This behaves like a classical NOT gate. It swaps the probability amplitude of 0 and 1 for the input qubit.",
+          "@gate:X"
+        ]
+      },
+      {
+        "id": "s38",
+        "title": "Hadamard gate",
+        "blocks": [
+          "$$H=\\frac1{\\sqrt2}\\begin{bmatrix}1&1\\\\1&-1\\end{bmatrix}$$",
+          "When applied to the basis states, this gate creates equal superpositions: H$|0\\rangle$ = $|+\\rangle$ and H$|1\\rangle$ = $|-\\rangle$. However, H does not always create a superposition. For example, H$|+\\rangle$ = $|0\\rangle$ and H$|-\\rangle$ = $|1\\rangle$. If the input is already in superposition, H applies linearly to each component, and the amplitudes can add or cancel. This is a simple example of quantum interference.",
+          "@gate:H"
+        ]
+      },
+      {
+        "id": "s41",
+        "title": "CNOT gate",
+        "blocks": [
+          "We can also use quantum gates that either input or output multiple qubit systems. We can consider the CNOT gate. Classically, the CNOT gate takes in two bits and flips the second bit if the first bit is 1, keeping the second bit the same if the first bit is 0. With probability amplitudes, it does something similar. That is, the probability amplitudes for states $|10\\rangle$ and $|11\\rangle$ are swapped and the probability amplitudes for $|00\\rangle$ and $|01\\rangle$ remain the same. This is a $4\\times4$ matrix since it inputs a two qubit system and outputs a two qubit system.",
+          "$$\\mathrm{CNOT}=\\begin{bmatrix}1&0&0&0\\\\0&1&0&0\\\\0&0&0&1\\\\0&0&1&0\\end{bmatrix}$$",
+          "We can also visualize what it does for each state. For state $|xy\\rangle$, CNOT$|a,b\\rangle$ = $|a,b \\oplus  a\\rangle$. This is applied linearly to all states of a qubit system. The CNOT gate can be used to create entangled qubits. To apply a gate to multiple qubits, we first combine the qubits using a tensor product and then multiply by the gate matrix.",
+          "@gate:CNOT"
+        ]
+      },
+      {
+        "id": "toffoli",
+        "title": "Toffoli gate",
+        "blocks": [
+          "Definition: The Toffoli gate takes in three qubits. The first two are the controls and the third is the target. On a basis state, it flips the target if both controls are 1 and leaves the controls unchanged.",
+          "$$\\mathrm{Toffoli}|a,b,c\\rangle=|a,b,c\\oplus(a\\land b)\\rangle$$",
+          "What happens if we start the third qubit at 0? It now holds the AND of the first two bits, and we still have both inputs. Just like CNOT, the gate acts linearly on a superposition of basis states.",
+          "@gate:Toffoli"
+        ]
+      },
+      {
+        "id": "s45",
+        "title": "Quantum Circuits",
+        "blocks": [
+          "With our definitions of Qubits, states, and gates, we can create a quantum circuit.",
+          "Definition: A quantum circuit is a combination of qubits initialized to some quantum state, a sequence of quantum gates applied in some order to those qubits, and measurements that produce classical output bits.",
+          "Here is an example of a quantum circuit. We start with two qubits, each initialized to $|0\\rangle$, so the joint state is $|00\\rangle$. We apply H to the first qubit, then CNOT with the first qubit as the control and the second as the target. The state changes as follows:",
+          "$$|00\\rangle\\ \\longrightarrow\\ \\frac{|00\\rangle+|10\\rangle}{\\sqrt2}\\ \\longrightarrow\\ \\frac{|00\\rangle+|11\\rangle}{\\sqrt2}$$",
+          "Then, we measure both qubits to get a probability distribution over the possible two-bit outcomes:",
+          "@circuit",
+          "We can see the possible ending states is P(00) = $\\tfrac12$ and P(11) = $\\tfrac12$. So, this circuit starts with $|00\\rangle$ and measurement outputs 00 with probability $\\tfrac12$ or 11 with probability $\\tfrac12$. Before measurement, its output is the superposition ($|00\\rangle$ + $|11\\rangle$)/√2, not a randomly selected classical state. So, what does it mean to say that a quantum circuit decides a language in the same way that a classical circuit family or Turing machine decides a language? We will see that in the next section."
+        ]
+      },
+      {
+        "id": "circuit-creator",
+        "title": "Circuit creator",
+        "blocks": [
+          "@creator"
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "families",
+    "title": "Circuit families",
+    "topics": "Size · Depth · Uniformity",
+    "sections": [
+      {
+        "id": "s52",
+        "title": "From circuits to families",
+        "blocks": [
+          "Most of the information here is a review of classical circuits, with only small changes made for quantum circuits. This section can be easily skimmed through if you are already familiar with classical circuits."
+        ]
+      },
+      {
+        "id": "s53",
+        "title": "Quantum Circuit Size and Depth",
+        "blocks": [
+          "We will start with something simple, depth and size. These definitions are exactly the same as they are for classical circuits. We choose a set of elementary gates (for classical circuits, these were AND, OR, and NOT). Then, the size of a circuit is the total number of elementary gates and the depth is the largest number of sequential gates along a path through the circuit.",
+          "Definition: size(C) = number of elementary gates in C",
+          "Definition: depth(C) = length of the longest directed path from an input to an output gate (or equivalently, the number of sequential gate layers)."
+        ]
+      },
+      {
+        "id": "s57",
+        "title": "Computing Functions with Quantum Circuits",
+        "blocks": [
+          "Recall from classical circuits that a circuit computes a function $f:\\{0,1\\}^n\\to\\{0,1\\}$ if:",
+          "$$\\forall x\\in\\{0,1\\}^n,\\quad C(x)=f(x)$$",
+          "But how do we input a value into a quantum circuit? We can take each bit of x and transform it into a qubit $|0\\rangle$ or $|1\\rangle$.  Then, we can combine each of the qubits using the tensor product to get the quantum system for $|x\\rangle$, this is our initial input. We may also need ancilla qubits, which are hardcoded inputs. By convention, every ancilla qubit is initialized to $|0\\rangle$, so the initial state of the circuit will be $|x\\rangle$ ⊗ $|0^a\\rangle$, where a is the number of needed ancilla bits. Then, we run the quantum circuit and take a measurement at the end.",
+          "### Exact quantum computation",
+          "Exact quantum computation requires that the output is correct 100% of the time on every input.",
+          "$$\\forall x\\in\\{0,1\\}^n,\\quad \\Pr[C(|x\\rangle)=f(x)]=1$$",
+          "### Bounded-error quantum computation",
+          "We can also allow error, in a way very similar to randomized computation. The probability that the measurement yields the correct output must be at least two thirds on every input.",
+          "$$\\forall x\\in\\{0,1\\}^n,\\quad \\Pr[C(|x\\rangle)=f(x)]\\ge\\tfrac23$$",
+          "We will use bounded error for our main quantum complexity class."
+        ]
+      },
+      {
+        "id": "s64",
+        "title": "Deciding Languages with Quantum Circuits",
+        "blocks": [
+          "We come into the same issues as we did with classical circuits: if a circuit can only take in inputs of a fixed length n, how do we decide a language? We solve this problem in the same way as classical circuits by defining circuit families.",
+          "Definition: A Quantum Circuit Family is a set $\\{C_0,C_1,\\ldots\\}$ such that for all n, there is one specified circuit $C_n$ that takes inputs of length n (possibly with additional ancilla qubits).",
+          "Definition: A quantum circuit family decides L ⊆ $\\{0,1\\}^*$ with bounded error if, for every n and every x ∈ $\\{0,1\\}^n$:",
+          "$$x\\in L\\implies\\Pr[C_n(x)=1]\\ge\\tfrac23$$",
+          "$$x\\notin L\\implies\\Pr[C_n(x)=1]\\le\\tfrac13$$",
+          "That is, for each length n there is a quantum circuit that computes the characteristic function for membership of inputs of that length."
+        ]
+      },
+      {
+        "id": "s71",
+        "title": "Quantum Circuit Family Size and Depth",
+        "blocks": [
+          "This is once again the same as with classical circuits. We can define the asymptotic size and depth of a quantum circuit family by observing how the size and depth of individual circuits change as input size increases",
+          "Def: A quantum circuit family C has size s(n) if size($C_n$) = s(n). A quantum circuit family has size in O(f(n)) if s(n) ∈ O(f(n))",
+          "Def: A quantum circuit family has depth d(n) if depth($C_n$) = d(n). A quantum circuit family has depth in O(f(n)) if d(n) ∈ O(f(n))."
+        ]
+      },
+      {
+        "id": "s75",
+        "title": "Uniformity vs. Non-Uniformity",
+        "blocks": [
+          "Just like classical circuits, answers can be “hardcoded” into circuits due to their nonuniform nature. There is no requirement that circuits inside a circuit family be easily constructible, nor that the languages they decide are computable. With classical circuits we had two choices: we ignored the non-uniformity issue and treated circuits like a completely new form of computation not linked to real world computability, or we could add an additional restriction that circuits be able to be easily constructed using a turing machine.",
+          "We called the second choice “uniform circuit families.”  Recall that a uniform circuit family must be such that there exists a TM that can construct $C_n$ when input $1^n$. We added additional restrictions, such as poly-time uniform circuits being circuit families that are constructible by a poly-time TM. We also could define log space uniform circuit families that are constructible by a log-space TM.",
+          "For quantum circuits, we define this similarly.",
+          "Definition: A uniform quantum circuit family is a family of quantum circuits such that there exists a deterministic TM M that, on input $1^n$, outputs an encoding ⟨$C_n$⟩ of the quantum circuit $C_n$. For polynomial-time uniformity, M must run in polynomial time in n.",
+          "Note that the TM only creates the circuit, it does not simulate it. This is how we can have a deterministic turing machine generate a circuit that is not deterministic."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "classes",
+    "title": "Complexity classes",
+    "topics": "BQP · EQP · QMA",
+    "sections": [
+      {
+        "id": "s81",
+        "title": "BQP",
+        "blocks": [
+          "BQP stands for “Bounded-error Quantum Polynomial time” and is the most important quantum complexity class in quantum computing. It is the equivalent of BPP (Bounded-error Probabilistic Polynomial time) for turing machine computation.",
+          "Definition: L ∈ BQP if there exists a polynomial time uniform polynomial sized circuit family C deciding L with $\\tfrac13$ bounded error.",
+          "Note that BQP is not just all languages decided by polynomial sized quantum circuit families, but rather all languages decided by polynomial time uniform polynomial sized quantum circuits.",
+          "We know that BQP is the quantum analogue of BPP, but are they actually different or does BQP = BPP? We know that both have bounded error of $\\tfrac13$. BPP uses a polynomial-time randomized TM, while BQP uses a polynomial-time uniform family of polynomial-size quantum circuits. Such a quantum circuit has polynomially many elementary gates, so it can be executed with polynomially many gate operations. Its output probabilities come from quantum measurement, with amplitudes that can interfere, rather than from random tape bits alone. It is actually an open question on whether BQP = BPP, and we will explore the consequences of this later."
+        ]
+      },
+      {
+        "id": "s86",
+        "title": "EQP",
+        "blocks": [
+          "We discussed that it is far more natural to allow quantum circuits to have probabilistic errors upon measurement, but we can also force quantum circuits to deterministically decide membership. That leads to the complexity class EQP, or Exact Quantum Polynomial time.",
+          "Definition: L ∈ EQP iff there exists a polynomial-time uniform, polynomial-size quantum circuit family {$C_n$} such that every input x ∈ $\\{0,1\\}^n$ is decided exactly: x ∈ L ⟹ Pr[$C_n$(x) = 1] = 1 and x ∉ L ⟹ Pr[$C_n$(x) = 1] = 0.",
+          "Equivalently, the circuit has zero error on every input, rather than the bounded error allowed in BQP.",
+          "We can imagine that EQP may be less powerful than BQP. We can see clearly that EQP ⊆ BQP (as we can consider any deterministic polynomial time uniform polynomial sized circuit family to be a probabilistic one with error 0). But does EQP = BQP? Does allowing error in quantum computing actually grant us more computational power?",
+          "Just like BQP was the analogue of BPP, EQP is the analog of P for quantum circuits. But what about the analog for NP?"
+        ]
+      },
+      {
+        "id": "s93",
+        "title": "QMA",
+        "blocks": [
+          "Recall the verifier based definition of the complexity class NP:",
+          "Definition: L ∈ NP if there is a polynomial-time deterministic verifier V and a polynomial p such that x ∈ L ⟹ there exists w ∈ $\\{0,1\\}^{p(|x|)}$ with V(x,w) = 1, and x ∉ L ⟹ every such w satisfies V(x,w) = 0.",
+          "Consider translating this definition into quantum circuits. We are given a classical input x encoded into qubits in the same way as before. We are also given a certificate, but this time the certificate can be encoded with qubits in any way necessary, not just encoded as a classical input. Then, we can define QMA similarly to NP:",
+          "Definition: L ∈ QMA if there exists a polynomial-time uniform quantum verifier family {$V_n$} with a polynomial-qubit witness register such that x ∈ L ⟹ there exists a witness $|\\psi \\rangle$ with Pr[$V_n$(x,$|\\psi \\rangle$) accepts] ≥ $\\tfrac23$, while x ∉ L ⟹ every witness $|\\psi \\rangle$ satisfies Pr[$V_n$(x,$|\\psi \\rangle$) accepts] ≤ $\\tfrac13$.",
+          "This is similar to NP in the sense that an x that belongs to L has some witness that allows the fixed verifier to accept with probability at least $\\tfrac23$, while for an x that does not belong to L there is no certificate that can ever improve the probability of the circuit accepting x to greater than $\\tfrac13$.",
+          "We know that BQP ⊆ QMA, since we can imagine BQP circuit families as ignoring its witness and running the BQP computation. We also know that NP ⊆ QMA, as proven in the Main Theorems section using reversible simulation of classical verifiers.",
+          "That brings up interesting questions. Does verification give us more power in the world of quantum computation. We cannot yet prove P = NP, but what about BQP = QMA?"
+        ]
+      },
+      {
+        "id": "s101",
+        "title": "Known Containments",
+        "blocks": [
+          "Known containments include P ⊆ EQP, EQP ⊆ BQP, BQP ⊆ PSPACE, P ⊆ BPP, BPP ⊆ BQP, NP ⊆ QMA, and BQP ⊆ QMA. These are containments, not claims that the corresponding inclusions are strict."
+        ]
+      },
+      {
+        "id": "s103",
+        "title": "Unknown Equalities",
+        "blocks": [
+          "Does P = EQP? Does BPP = BQP? Does NP = QMA? What happens if any of these equalities turn out to be true? What if they turn out to be false? For these particular comparisons, strict separation or equality remains unknown, and there are interesting implications for each.",
+          "If BPP ≠ BQP it implies that quantum interference gives us strictly more computational power than classical randomness, while the inverse suggests the opposite. NP ≠ QMA would demonstrate that encoding our certificates with quantum states and running with quantum interference gives us strictly more power than deterministic turing machine verifiers."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "theorems",
+    "title": "Main theorems",
+    "topics": "Simulation · Containment",
+    "sections": [
+      {
+        "id": "s107",
+        "title": "Simulating TMs With Quantum Circuits",
+        "blocks": [
+          "In order to prove class containments across models of computation, we need a way to simulate one method within the other. We will present a method of simulating traditional TMs with quantum circuit families, and then use that idea to prove class containments",
+          "We already know that we can efficiently turn a TM into a boolean circuit. Boolean and quantum circuits are both circuits, so it may be easier to simulate a boolean circuit within a quantum circuit, and then use that fact to simulate TMs.",
+          "Since we want to simulate classical boolean circuits, we will only use qubits not in superposition, and will not use any gates that cause the creation of a superposition. We are simply simulating boolean circuits using quantum gates and qubits, so we want it to remain as classical as possible.",
+          "The problem with just implementing AND and OR gates with quantum gates and then re-creating a boolean circuit is that AND and OR gates are not reversible. AND and OR take two bits and produce one bit, losing information about the input. They are not reversible, so we cannot directly implement them as unitary quantum gates on those same bits.",
+          "To get past this issue, we can use ancilla qubits as information holding bits that allow for reversibility without affecting the final answer. Each ancilla qubit is almost like “scratch paper” for the circuit.",
+          "Recall the Toffoli gate:",
+          "$$\\mathrm{Toffoli}|a,b,c\\rangle=|a,b,c\\oplus(a\\land b)\\rangle$$",
+          "If qubit c is an ancilla qubit initialized to $|0\\rangle$, we get the gate:",
+          "$$\\mathrm{Toffoli}|a,b,0\\rangle=|a,b,a\\land b\\rangle$$",
+          "Which stores a AND b in the ancilla qubit. It does not remove any information and keeps the gate reversible. So, anytime we need to use an AND gate we simply use a Toffoli gate with an ancilla bit initialized to $|0\\rangle$. But what about OR gates?",
+          "We can compute OR reversibly as well. Since a ∨ b = ¬(¬a ∧ ¬b), we can apply X to both input qubits, use Toffoli with a fresh ancilla initialized to $|0\\rangle$ to store ¬a ∧ ¬b, flip that ancilla with X, and then undo the X gates on the original inputs. The result stores a ∨ b while preserving the inputs.",
+          "Also, note that NOT gates are reversible, so they can easily be implemented as quantum gate matrices without the use of ancilla qubits.",
+          "So, given a boolean circuit, replace all AND, OR, and NOT gates with their quantum counterpart described above. Replace the input with computational-basis qubit systems tensored with as many ancilla bits as AND and OR gates.",
+          "Since no superpositions are created, the output is deterministic and thus has no error. Furthermore, since each classical gate is replaced with a constant-size reversible construction, circuit size increases by at most a constant factor. So, a polynomial sized circuit family can be simulated by a polynomial sized quantum circuit family."
+        ]
+      },
+      {
+        "id": "s122",
+        "title": "P ⊆ EQP",
+        "blocks": [
+          "Using the idea of boolean circuit simulation, we now have the power to easily show that P ⊆ EQP.",
+          "Let L ∈ P. Thus, there exists a poly-time TM M deciding L. Use the efficient TM to circuit theorem to construct a polynomial sized circuit family C deciding L. Then, use efficient boolean circuit quantum simulation to create an exact polynomial-size uniform quantum circuit family Q. Thus, for all L in P there exists an exact polynomial-size uniform quantum circuit family Q deciding L, so L ∈ EQP."
+        ]
+      },
+      {
+        "id": "s125",
+        "title": "BPP ⊆ BQP",
+        "blocks": [
+          "We want to use the same strategy above, but we don’t know whether randomized TM can be efficiently implemented with randomized boolean circuits while maintaining error bounds, and whether randomized boolean circuits can be implemented with quantum circuits while maintaining error bounds.",
+          "Step 1 is to extend the efficient TM to circuit theorem to apply to randomized TMs. We can do this by first viewing using the random tape model. View a PTM as a deterministic TM that takes in two inputs: the traditional input and the random tape. Then, the PTM is just this deterministic TM with the power to uniformly randomly assign this input tape. We can efficiently implement the deterministic TM aspect of this with a polynomial-time uniform Boolean circuit family.",
+          "How do we implement the uniformly randomized string input using a randomized boolean circuit? Randomized boolean circuits traditionally allow for uniformly random input bits, so this is actually done by assumption of the computation model!",
+          "Since given a random input string, the output of the randomized boolean circuit is exactly the same as the PTM, their error bounds must be exactly the same. So now we have an efficient PTM to randomized boolean circuit theorem.",
+          "How do we implement this as a quantum circuit? Well once again we can implement all the gates with constant-size constructions for the randomized Boolean circuit, we just need a way to generate uniform random bits within the quantum computation. We can do this with $|0\\rangle$ ancilla qubits passed into a Hadamard gate. Recall that when applied to $|0\\rangle$, the Hadamard creates the superposition $|+\\rangle$, which has P(0) = P(1) = $\\tfrac12$. This is precisely what we need, each ancilla qubit having equal probability of being 0 or 1. In a circuit model with intermediate measurements, we can measure these Hadamard outputs to obtain the random bits. Equivalently, in our unitary circuit model we can leave the random register in superposition, apply the reversible Boolean simulation coherently, and measure only the final output bit. The random-string branches remain distinguishable in the retained register, so this gives the same acceptance probability.",
+          "Once again, since the randomized string is uniformly random, and for a given random string the output is deterministic, we maintain the same error probability as the original PTM. Furthermore, for a randomized string of m bits we add m gates, which maintains the asymptotic bound (because the classical computation uses only polynomially many random bits).",
+          "So, now we know we can efficiently simulate a PTM with a quantum circuit while maintaining the polynomial circuit size and polynomial-time uniformity. This allows us to now prove BPP ⊆ BQP",
+          "Let L ∈ BPP. Thus, there exists a polytime PTM M deciding L with bounded error $\\tfrac13$. We can apply the expanded efficient PTM to randomized boolean circuit theorem to get a randomized boolean circuit family C that decides L with polynomial size and bounded error $\\tfrac13$. Then, we can use the above fact to simulate C with a polynomial sized quantum circuit family that decides L with bounded error $\\tfrac13$. Thus, L ∈ BQP.",
+          "Uniformity is preserved throughout both simulations. Given $1^n$, a deterministic polynomial-time generator first constructs the Boolean circuit simulating the classical machine and then replaces each Boolean gate with its constant-size quantum construction. For the randomized case, it also adds polynomially many Hadamard gates for the random register. The resulting quantum circuit description is therefore still generated in polynomial time."
+        ]
+      },
+      {
+        "id": "s135",
+        "title": "NP ⊆ QMA",
+        "blocks": [
+          "We can also use the same idea of simulating classical computation to show that NP ⊆ QMA. Recall that NP can be defined using a polynomial-time deterministic verifier V. Given an input x that belongs to L, there exists a polynomial-length classical certificate w such that V(x,w) accepts. If x does not belong to L, no certificate will cause V to accept.",
+          "Let L ∈ NP. Since V runs in polynomial time, we can use the efficient TM-to-circuit simulation and our reversible Boolean circuit construction to create a polynomial-time uniform quantum verifier Q. We give Q the classical input $|x\\rangle$ and encode a certificate w as the computational-basis state $|w\\rangle$ in its witness register. Q then simulates V(x,w) exactly.",
+          "If x ∈ L, there exists a certificate w for which Q accepts with probability 1, which is at least $\\tfrac23$. If x ∉ L, Q rejects every classical certificate with probability 1. It also rejects any quantum superposition of certificates with probability 1, since the reversible simulation preserves the witness register and none of the classical branches accept. Thus, Q satisfies the requirements of QMA, so L ∈ QMA and NP ⊆ QMA."
+        ]
+      },
+      {
+        "id": "s139",
+        "title": "BQP ⊆ PSPACE",
+        "blocks": [
+          "This is the main, substantial theorem that we will prove. This is vital because it shows that the power of quantum computation has a fundamental limitation. Anything that we can solve with an efficient uniform quantum circuit can be solved by a deterministic polynomial space turing machine.",
+          "In order to prove this theorem, we need to simulate in the opposite direction. We need to simulate a quantum circuit with a TM, and then prove that the TM uses polynomial space.",
+          "If we attempted to naively simulate a quantum circuit with a TM by tracking all the qubit states, we come into a problem. We showed that having n qubits results in a vector of size $2^n$. Thus, the number of states of a qubit system is exponential with respect to the number of qubits. This seems to suggest that it would require exponential space to simulate a quantum circuit. So how can we do it with polynomial space?",
+          "Well our first observation is that we don’t actually care about all of the state’s amplitudes, we only care about the probability that the circuit accepts. That is, given the final qubit system",
+          "$$|\\psi_{\\mathrm{final}}\\rangle=\\sum_{z\\in\\{0,1\\}^{m}}\\alpha_z|z\\rangle,\\qquad\\sum_z|\\alpha_z|^2=1$$",
+          "Where $z_1$ is the output qubit, we only care about P($z_1$ = 1), which we get by squaring the amplitudes of each state resulting in $z_1$ = 1. If we can individually calculate the amplitude of those states and then keep track of a running total of the probability, we don’t need to keep track of all system states at once. In pseudo-code, this looks like:",
+          "```acceptProbability = 0\nfor each final basis state z with output bit 1:\n    amplitude = ComputeFinalAmplitude(z)\n    acceptProbability += |amplitude|²\nreturn acceptProbability```",
+          "If ComputeFinalAmplitude(z) can be implemented using polynomial space, and each contribution can be accumulated with polynomially many bits of precision, then the computation can reuse its workspace for each z and stay within polynomial space. Even if it runs exponentially many times, the overall space will still be polynomial. So how can we get the final amplitude of each state?",
+          "Recall that we can view the circuit as a series of applying gates in the form of matrices. While we can apply these gates to individual qubits, we can also apply the gates to all m qubits at once. So, each gate can be represented by a $2^m\\times2^m$ matrix that acts on all m qubits at once. We know there are a polynomial number of gates total, so the entire circuit can be seen as",
+          "$$|\\psi_{\\mathrm{final}}\\rangle=U_T U_{T-1}\\cdots U_1|x,0^a\\rangle,\\quad T=\\operatorname{poly}(n)$$",
+          "Where x is the input system and each $U_i$ is a gate/matrix. For a given basis string z, the probability of observing z upon measurement is $|\\alpha_z|^2$, where $\\alpha_z$ = $\\langle z|\\psi_{\\rm final}\\rangle$. This is the squared magnitude of the corresponding entry of the final state vector.",
+          "@unfinished"
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "power",
+    "title": "Computational power",
+    "topics": "Speedups · Limits · Open questions",
+    "sections": [
+      {
+        "id": "s154",
+        "title": "Overview",
+        "blocks": [
+          "@containments",
+          "So far in quantum circuit complexity theory we know these containments. These containments tell us interesting things about quantum computing. We know that poly-time uniform quantum circuits can compute at least as much as their deterministic and probabilistic polynomial-time TM counterparts. However, we don’t know if they are able to compute strictly more.",
+          "We also know that polynomial-time uniform quantum circuits are bound by PSPACE, which introduces a fundamental limit to the computation power of these types of quantum circuits. So far, we have no containment to suggest that BQP is strictly more powerful than classical bounded-error polynomial-time computation despite having found many algorithms strictly faster than their best-known classical counterparts."
+        ]
+      },
+      {
+        "id": "s158",
+        "title": "Proven Quantum Speedups",
+        "blocks": [
+          "While we may not be able to prove any complexity class (in)equalities that suggests quantum computing is strictly more powerful than traditional computation, we have proved a strict improvement in another area of complexity theory: query complexity theory on unstructured search problems.",
+          "First, query complexity theory. We’ve discussed oracle TMs: turing machines with access to an “oracle” that gives an answer to a question asked by the TM. We can study the query complexity of an oracle TM, the number of queries a TM needs to make to solve a problem.",
+          "Next, what is an unstructured search problem? Given a function f: $\\{0,1\\}^n$$\\to${0,1} the problem is to determine if there exists any x such that f(x) = 1. So, combining these two things we get query complexity theory on unstructured search problems: the number of oracle queries required for a computing device to determine whether there exists an x such that f(x) = 1.",
+          "The classical randomized query complexity is $\\Theta(N)$, where N = $2^n$ (the number of possible inputs to f). This corresponds to simply querying every single value of x into f(x) to see if it returns 1. That is, an exhaustive classical search takes O(N) queries, and a bounded-error classical randomized algorithm still requires $\\Omega(N)$ queries in the worst case. Grover's algorithm gives an $O(\\sqrt N)$-query bounded-error quantum algorithm for this problem, and a matching $\\Omega(\\sqrt N)$ quantum query lower bound is known.",
+          "We will not provide a proof of this, but this demonstrates that there are areas of complexity theory that demonstrate a strict improvement over classical computation methods for quantum computation.",
+          "The reason this result does not establish an unconditional separation between quantum and classical complexity classes is that this result only measures the number of queries to an oracle, not the cost of creating or querying that oracle. Furthermore, since N = $2^n$, $\\sqrt N$ and N are both still exponential in n."
+        ]
+      },
+      {
+        "id": "s165",
+        "title": "Limitations of Quantum Computation",
+        "blocks": [
+          "There are still fundamental limits to quantum computation. Our definition of quantum complexity classes involves uniformity in some way in an attempt to bound quantum circuits to the real world the same way turing machines are. With non-uniformity quantum circuits could decide uncomputable languages the same way boolean circuit families can, the uniformity limitation stops this. When discussing limitations of quantum computation, we will be referring strictly to uniform circuit families, which allows us to discuss the real world limitations of this model of computation."
+        ]
+      },
+      {
+        "id": "s167",
+        "title": "Uncomputable languages",
+        "blocks": [
+          "In the standard uniform quantum circuit model with a fixed finite gate set with efficiently computable entries, a classical TM can simulate a quantum circuit to sufficient precision, even if the simulation is inefficient. Thus, quantum computers cannot decide uncomputable languages such as HALT. This follows from the mathematical model, not merely from an intuition about the laws of physics."
+        ]
+      },
+      {
+        "id": "s169",
+        "title": "Superposition does not give us access to exponentially many classical answers",
+        "blocks": [
+          "When first introduced to quantum computing, it is natural to believe that problems that take exponential time in classical computation could be solved in polynomial time by simply encoding many different solutions in a super position. After all, n qubits have $2^n$ possible states, all of which have their own amplitudes. Could we use these exponentially many states to keep track of exponentially many answers at once, and then collapse to the correct one at the end? The answer is no, and we cannot have access to an exponential amount of answers at once using quantum computation. When observed, we only ever get to see one n-bit outcome of the $2^n$ possible outcomes."
+        ]
+      },
+      {
+        "id": "s171",
+        "title": "No-cloning theorem",
+        "blocks": [
+          "Classical boolean circuits allow us to freely copy bits. We are free to define a reversible circuit that takes (b,0) and outputs (b,b). However, we are not allowed to copy arbitrary unknown qubits in quantum circuits. The proof is simple.",
+          "Assume for contradiction that there is a gate U that copies a qubit and its states. That is, U($|\\psi \\rangle$$|0\\rangle$) = $|\\psi \\rangle$$|\\psi \\rangle$ for every qubit $|\\psi \\rangle$. Note that since quantum gates must take in and output the same number of qubits we need the ancilla qubit $|0\\rangle$. We know because of linearity that this gate must apply linearly to each state of a qubit. Consider the qubit $|+\\rangle$ and consider U$|+0\\rangle$. Then,",
+          "$$|+\\rangle=\\frac{|0\\rangle+|1\\rangle}{\\sqrt2}\\implies U|+0\\rangle=\\frac{U|00\\rangle+U|10\\rangle}{\\sqrt2}=\\frac{|00\\rangle+|11\\rangle}{\\sqrt2}$$",
+          "However, this is not equal to $|++\\rangle$ = ($|00\\rangle$ + $|01\\rangle$ + $|10\\rangle$ + $|11\\rangle$)/2. This is a contradiction, and thus a universal cloning gate cannot exist.",
+          "This only limits us from perfectly copying unknown arbitrary quantum states. We can use CNOT gates to copy the known quantum basis-states $|0\\rangle$ and $|1\\rangle$. This is actually very important to make sure that we can properly simulate boolean circuits that duplicate bits."
+        ]
+      },
+      {
+        "id": "s177",
+        "title": "Large Open Questions and Their Consequences",
+        "blocks": []
+      },
+      {
+        "id": "s178",
+        "title": "BPP ?= BQP",
+        "blocks": [
+          "One open question we have discussed is whether BPP = BQP. This is a very important open question because of its implications in either direction:",
+          "BPP = BQP: Every bounded-error polynomial-time quantum decision problem can be solved by a polynomial-time randomized classical algorithm, with bounded error.",
+          "BPP ≠ BQP: There exists some language that can be solved by a polynomial-time uniform, polynomial-size quantum circuit family that cannot be solved by a bounded error polynomial time PTM.",
+          "Researchers suspect that BPP ≠ BQP but it is still an open question and is vital to understanding whether quantum computers are strictly more powerful than classical computers."
+        ]
+      },
+      {
+        "id": "s183",
+        "title": "NP ⊆? BQP",
+        "blocks": [
+          "Is NP contained in BQP? This question is vital to understanding whether quantum computers would be able to solve NP-complete problems such as SAT in polynomial time and bounded error.  While researchers do not suspect containment, if it were proved it would demonstrate the enormous power of quantum computation. Note that using Grover's algorithm to search over n-bit SAT assignments takes $O(2^{n/2})$ oracle queries, with polynomial overhead per query for evaluating a formula, but this is still exponential."
+        ]
+      },
+      {
+        "id": "s185",
+        "title": "BQP ?= PSPACE",
+        "blocks": [
+          "We know that BQP is contained within PSPACE, but if equality holds we would know that every PSPACE problem can be efficiently solved by quantum computers. This would have enormous implications, but equality is not suspected."
+        ]
+      },
+      {
+        "id": "s187",
+        "title": "Why Are These Problems So Hard?",
+        "blocks": [
+          "As we’ve seen in the difficulty of proving bounds for boolean circuits, it is extremely difficult to prove bounds across different forms of computation. To prove BPP ≠ BQP, researchers would need a specific language efficiently decided by quantum circuits and a proof that no polynomial-time randomized classical TM can decide it. The second part is extremely difficult, especially since lower bounds in themselves are so hard to prove. We cannot yet even prove whether or not SAT can be solved in polynomial time, demonstrating the extreme challenge of proving lower bounds required to create strict containments between classes.",
+          "Researchers have been able to prove certain results via relativization . For example, there exists an oracle A such that $\\mathsf{BPP}^A\\ne\\mathsf{BQP}^A$. However, these relativization proofs do not prove this for non-oracle based computation."
+        ]
+      }
+    ]
+  }
+]

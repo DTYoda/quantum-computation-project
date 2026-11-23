@@ -1,36 +1,15 @@
-# Quantum Computation Project
+# Quantum Atlas
 
-## Change the text
+A Next.js course guide for CMU 15-455, built from the author's six-tab quantum complexity transcript.
 
-Open **content/site.ts**. All website text is in this one file.
+## Run locally
 
-- `title`: the website name at the top and in the browser tab.
-- Each page's `title`: its heading.
-- `navigationLabel`: its name in the navigation.
-- `body`: your writing, between the two backticks. Leave it empty until you are ready.
+Use `npm ci` to install the locked dependencies, then `npm run dev`. Open the local address printed by Next.js. For the production build, run `npm run build`, `npm run typecheck`, then `npm start`.
 
-Write directly between the backticks. Press Enter for a new line; blank lines and bullet characters (•) appear as written. This is plain text, not Markdown or HTML. Quotes and apostrophes are fine inside the body. If you need a literal backtick, write \`; if you need literal ${, write \${.
+## Finish the project
 
-To add a page, copy one complete object in `sections` and give it a unique `slug`. To remove a page, delete its object. Navigation updates automatically. A slug sets the URL, such as `/section-1`.
+Read [the author handoff](AUTHOR-HANDOFF.md) for the rubric review and outstanding writing.
 
-## See your changes
+Edit `content/chapters.json` for lesson text. Each chapter has a slug, title, topic line and ordered sections. Each section has a stable ID used by links. Each paragraph is a separate block. Put inline LaTeX between single dollar signs and a display equation between double dollar signs. In JSON strings, a LaTeX backslash is written twice. A block beginning with “Definition:” receives definition styling. Keep the widget markers when editing surrounding text.
 
-```sh
-npm install
-npm run dev
-```
-
-Open http://localhost:3000. Save your edits to see them update automatically. If a production preview is already using port 3000, use the alternate local URL printed by the dev server.
-
-## Styles
-
-Edit `app/globals.css` to change the appearance. No React layout changes are needed for text edits.
-
-## Build and deploy
-
-```sh
-npm run build
-npm run typecheck
-```
-
-Import the repository into Vercel with the Next.js preset and default settings. No environment variables are required. Published changes require a new deployment.
+The unfinished motivation chapter currently has no sections. Give it a section with an ID, heading and paragraph blocks to replace its placeholder automatically. Replace the main proof’s `@unfinished` block with your continuation. The references are in `app/references/page.tsx`. The original planning outline remains in `content/site.ts`.

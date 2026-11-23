@@ -1,11 +1,2 @@
 import Link from 'next/link';
-import { site } from '@/content/site';
-
-export default function NotFound() {
-  return (
-    <>
-      <h1>{site.interface.pageNotFound}</h1>
-      <Link href="/">{site.outline.navigationLabel}</Link>
-    </>
-  );
-}
+export default function NotFound(){return <div className="wrap"><h1>Page not found</h1><Link href="/#chapters">Return to the chapter index</Link></div>}
