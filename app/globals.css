@@ -53,3 +53,24 @@ body:has(.proof-dialog[open]){overflow:hidden}
 .proof-body{padding:.25rem clamp(1rem,4vw,2rem) 1rem;overflow:auto;overscroll-behavior:contain}
 .proof-body h2{font:500 2rem/1.2 var(--serif);margin:1rem 0}
 .graph [role=button]{cursor:pointer}
+
+.course-steps{display:flex;flex-wrap:wrap;gap:.45rem;padding:1rem 0;margin:.75rem 0;border-block:1px solid var(--line)}
+.reading .course-steps a{font-size:.87rem;font-weight:550;text-decoration:none;background:#e6efdf;border-radius:5px;padding:.5rem .65rem}
+.reading .course-steps a:hover{text-decoration:underline}
+.concept-lab{margin:1.5rem 0;padding:clamp(14px,3vw,24px);border:1px solid var(--line);border-radius:12px;background:#fff}
+.concept-lab figcaption,.concept-lab output{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+.concept-lab figcaption{font-size:1.1rem;font-weight:650}.concept-lab small,.concept-lab output{font:500 .85rem/1.5 var(--mono)}
+.concept-lab .step-buttons{margin-top:1rem}.concept-lab svg{display:block;width:100%;max-height:215px}
+.concept-lab output{border-top:1px solid var(--line);padding-top:.75rem}
+.concept-lab.paths{background:#143529;color:#f2f8ed}.paths .step-buttons button{color:#183525}.paths .step-buttons button[aria-pressed=true]{background:#d1ec9c;color:#183525}.paths output{border-color:#54765d}
+.reading .lesson-source{font-size:.875rem;color:var(--muted);padding-top:.8rem;border-top:1px solid var(--line)}
+
+.circuit-workspace{max-width:62rem;margin:auto}.circuit-workspace h1{margin-bottom:.3em}
+.spin-detector{display:block;width:100%;height:clamp(135px,14vw,185px)}
+.spin-experiment .dial small,.spin-total{font: .79rem/1.5 var(--mono);color:#d5e6d7}
+.spin-experiment .angle-label{margin-top:.7rem}
+.spin-experiment select{max-width:100%;color:#e6f3df;border:1px solid #587665;background:#183e30;border-radius:5px;padding:4px}
+.spin-results{width:100%;border-collapse:collapse;font:.85rem/1.5 var(--mono);font-variant-numeric:tabular-nums}
+.spin-results th,.spin-results td{text-align:right;padding:.16rem 0}.spin-results th:first-child{text-align:left;letter-spacing:.1em}
+.spin-results thead{color:#b4cfbb;font-size:.78rem;border-bottom:1px solid #547261}.spin-results .q-bar{background:#3a5e4a}.spin-results .q-bar i{background:#c9eb94}
+.spin-actions{display:flex;flex-wrap:wrap;gap:6px;margin:.75rem 0 .45rem}.spin-actions button{font:inherit;font-size:.83rem;padding:.38rem .55rem;color:#e7f4e3;background:#214b3b;border:1px solid #76947d;border-radius:5px;cursor:pointer}.spin-actions button:first-child{background:#cfec9a;color:#162e24}.spin-actions button:disabled{opacity:.55}

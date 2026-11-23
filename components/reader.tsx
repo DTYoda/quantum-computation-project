@@ -1,15 +1,16 @@
 import Link from 'next/link';
+import { ParallelGates, HadamardPaths } from './motivation-labs';
+import chapters from '@/content/chapters.json';
 import { ProofButton, ProofNode } from './proof-reader';
 import { definitionTerms, definitionBlocks } from '@/lib/definitions';
 import { theoremNames } from '@/lib/proofs';
 import katex from 'katex';
 import { GateLab } from './gate-lab';
-import { CircuitCreator } from './circuit-creator';
 import { gates } from '@/lib/quantum';
 import {CircuitLab} from './labs';
 
 const targets:Record<string,string>={
-  'motivation':'/motivation','next section':'/families','consequences of this later':'/power#s178','Main Theorems section':'/theorems#s135',
+  'Basic Definitions page':'/definitions','Computational Power':'/power','Main Theorems':'/theorems','motivation':'/motivation','next section':'/families','consequences of this later':'/power#s178','Main Theorems section':'/theorems#s135',
   "Grover's algorithm":'/power#s158', 'PSPACE':'/theorems#s139',
 
 };
@@ -20,6 +21,7 @@ function linked(text:string,current:string){
   return text.split(pattern).map((part,i)=>{
     const key=words.find(w=>w.toLowerCase()===part.toLowerCase());
     if (!key) return part;
+    if (key === 'Main Theorems section' && current.endsWith('#s12')) return <ProofButton key={i} id="theorem-s139">{part}</ProofButton>;
     const proof = theoremNames[key] ?? (targets[key]?.startsWith('/theorems#') ? targets[key].split('#')[1] : undefined);
     const entry = proof ? 'theorem-'+proof : definitionTerms[key.toLowerCase()];
     if (entry) {
@@ -46,10 +48,19 @@ export function Containments(){return <figure className="graph"><figcaption>Know
   return <ProofNode key={name} id={id} label={'Read about '+name}>{shape}</ProofNode>;
 })}</svg></figure>}
 export function Block({value,current}:{value:string,current:string}){
-  if(value==='@creator')return <CircuitCreator/>;
+  if(value==='@creator')return <Link href="/circuit-creator">Open the circuit creator</Link>;
   const gate = gates.find(name => value === '@gate:'+name);
   if(gate)return <GateLab gate={gate}/>;
-  if(value==='@unfinished')return <p className="placeholder">Proof continuation · Awaiting author’s draft</p>;
+  if(value==='@parallel')return <ParallelGates/>;
+  if(value==='@paths')return <HadamardPaths/>;
+  if(value==='@roadmap')return <nav className="course-steps" aria-label="Course roadmap">{chapters.slice(1).map(c=><Link key={c.slug} href={'/'+c.slug}>{c.title}</Link>)}</nav>;
+  if(value.startsWith('@aside\n')){
+    const [,heading,...rows] = value.split('\n');
+    return <details><summary>{heading}</summary>{rows.map((row,i)=><Block key={i} value={row} current={current}/>)}</details>;
+  }
+  if (/^(Source for|Reference:|References for|Reference for)/.test(value)) {
+    return <p className="lesson-source">{value.split(/(https:\/\/[^\s;]+)/g).map((part,i)=>part.startsWith('https://')?<a href={part} key={i} aria-label={'Open source at '+new URL(part).hostname}>View source</a>:part)}</p>;
+  }
   if(value==='@circuit')return <CircuitLab/>;
   if(value==='@containments')return <Containments/>;
   if(value.startsWith('$$'))return <MathText display tex={value.slice(2,-2)}/>;
