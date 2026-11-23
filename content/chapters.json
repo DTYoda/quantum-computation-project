@@ -3,7 +3,34 @@
     "slug": "motivation",
     "title": "Motivation",
     "topics": "Classical circuits · Randomness",
-    "sections": []
+    "sections": [
+      {
+        "id": "why-quantum-circuits",
+        "title": "Why study quantum circuits?",
+        "blocks": [
+          "So far we’ve studied deterministic and random turing machine computation. Furthermore, we’ve seen uniform and non-uniform deterministic boolean circuits. We’ve seen how we can move between turing machines and circuits, and have learned how difficult it is to prove lower bounds for circuits. Turing machines were our first way of determining what it meant for something to be computable. They allowed us to study space and time complexity, and introduced us to deterministic, randomized, and non-deterministic methods of using turing machines. These echo pseudo-code like computation, similar to code that would be written on a modern day computer. They allow us to discuss algorithms and their complexity.",
+          "Meanwhile, circuits were interesting because they gave us the idea of non-uniform computation. They allowed us to study parallelism via depth and see how nonuniformity affected the theory behind computation. We were able to bring uniformity back to circuits, which gave us a method of computation that echoes how computers work in the real world. They acted as a sequence of gates on bits and worked purely deterministically.",
+          "The motivation for quantum circuits is similar to that of classical boolean circuits in that, when made uniform, they allow us to study a method of computation closely related to real world compassion. Just as boolean circuits echoed classical computers, quantum circuits echo quantum computers and quantum computation. While Turing Machines are good for the theory of computation, they are not used as a model for any real world computation. Meanwhile, quantum circuits model the real world.",
+          "Studying quantum circuits is important because it closely aligns with real world technology in progress. The systems we rely on for things like cryptography rely on the hardness of the computation. If it turns out that quantum circuits can efficiently solve these problems, it means that we may be able to implement those things with real world quantum computers.",
+          "Switching from deterministic computation to probabilistic computation provided us with new abilities that we are unsure whether are strictly more powerful than before. For example, we are unsure on whether P is strictly contained in BPP. Switching to non-deterministic computing did the same thing, providing us with NP which we do not know if it strictly contains P. Switching to quantum computation will provide us with BQP, which once again contains P, but strict containment is unknown. This time, however, we will see that it also contains BPP which suggests it may be even more powerful."
+        ]
+      },
+      {
+        "id": "quantum-differences",
+        "title": "What Makes Quantum Computation Fundamentally Different?",
+        "blocks": [
+          "There are three things that make quantum circuits fundamentally different from classical circuits. Before we introduce them, however, we need to understand randomized boolean circuits. We need to understand randomized circuits so we can understand that while quantum circuits involve probabilities, they are not the same as randomized circuits.",
+          "Randomized boolean circuits come in two main forms, either they are traditional circuits with some amount of auxiliary input bits that are randomly assigned to either 0 or 1 when the circuit is run, or the circuit is given a gate that outputs either 0 or 1 randomly with some probability. Both of these circuit types are random, and we do not need to dive deeper into the theory of randomized boolean circuits than this to understand quantum circuits.",
+          "### 1. Superposition",
+          "Quantum circuits allow superposition. Instead of randomized circuits where a bit is randomly assigned either 0 or 1, a ‘qubit’ (which will be defined later) is allowed to “carry” this probability with it, only having to make a decision once it is “observed.” A qubit may begin as either being 1 or 0 with equal likelihood, and end up being 1 90% of the time and 0 10% of the time. A traditional bit is either 0 or 1, and it can be deterministically 0 or 1 or randomly assigned 0 or 1. A qubit does not have to make a choice until it is observed.",
+          "### 2. Interference",
+          "Two qubits can both in a super position with equal likelihood of 0 or 1 but still not be the same… how is this possible? Rather than having a probability, qubits have amplitudes that become probabilities. These amplitudes can be positive, negative, or complex numbers. So, even though two qubits may have the same probabilities, their amplitudes may be different. These differing amplitudes can change the way they interact with each other. Two qubits with positive amplitudes may constructively interfere with each other, while two qubits with differing signed amplitudes may destructively interfere with each other. This adds another depth of interactions between qubits.",
+          "### 3. Entanglement",
+          "Qubits can be “entangled” together, fundamentally interlinking them. When qubits are entangled, they form a state that cannot be described by combining two individual qubit states. This is interesting because it means that qubits can be intertwined in a way that cannot be described by individual quantum states.",
+          "Combining these three fundamental differences makes quantum computing a very interesting topic to study, and motivates us to move away from classical computing and explore the powers of quantum computing."
+        ]
+      }
+    ]
   },
   {
     "slug": "definitions",
