@@ -9,6 +9,8 @@ const groups=[
 ['Quantum Computational Complexity','J. Watrous · 2009','Encyclopedia of Complexity and Systems Science.','https://jhwatrous.github.io/Watrous2009_complexity.pdf'],
 ['Quantum Computing Since Democritus','S. Aaronson · 2013','Cambridge University Press.']]},
 {label:'Research papers',items:[
+['A Meet-in-the-Middle Algorithm for Fast Synthesis of Depth-Optimal Quantum Circuits','M. Amy, D. Maslov, M. Mosca & M. Roetteler · 2013','IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems.','https://arxiv.org/abs/1206.0758'],
+['Quantum Complexity Theory','E. Bernstein & U. Vazirani · 1997','SIAM Journal on Computing.','https://epubs.siam.org/doi/10.1137/S0097539796300921'],
 ['A Simple Proof that Toffoli and Hadamard are Quantum Universal','D. Aharonov · 2003','arXiv.','https://arxiv.org/abs/quant-ph/0301040'],
 ['Algorithms for Quantum Computation: Discrete Logarithms and Factoring','P. Shor · 1994','Proceedings of FOCS. Extended paper linked.','https://arxiv.org/abs/quant-ph/9508027'],
 ['A Fast Quantum Mechanical Algorithm for Database Search','L. K. Grover · 1996','Proceedings of STOC.','https://arxiv.org/abs/quant-ph/9605043'],
